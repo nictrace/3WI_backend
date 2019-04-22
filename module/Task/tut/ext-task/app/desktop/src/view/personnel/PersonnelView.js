@@ -8,7 +8,7 @@ Ext.define('extTask.view.personnel.PersonnelView',{
 //	viewModel: {type: 'personnelviewmodel'},
 	store: {type: 'personnelviewstore'},
 	columns: [
-		{xtype:'rownumberer', text: 'Id',dataIndex: 'id'},
+		{text: 'Id', dataIndex: 'id'},
 		{text: 'Name',dataIndex: 'name', width: 230,cell: {userCls: 'bold'}, editable: true},
 		{
 			editor: {
