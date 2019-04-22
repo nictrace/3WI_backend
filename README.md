@@ -1,3 +1,44 @@
+# ZF3_REST_EtxJs_6.7_tutorial
+
+Актуальные версии Zend и ExtJs
+на Zend реализован REST API к базе, на ExtJs - просмотр и редактирование результатов
+
+совмещение фреймворков делалось на nginx, конфиг такой:
+```
+server {
+        listen 80;
+        server_name extjs.sytes.net;
+
+        location / {
+                proxy_pass http://192.168.0.30:8099;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-for $remote_addr;
+                proxy_set_header Host $host;
+                proxy_redirect off;
+                proxy_set_header Connection close;
+                proxy_pass_header Content-Type;
+                proxy_pass_header Content-Length;
+        }
+        location /sockjs-node {
+            proxy_pass http://localhost:8099/sockjs-node;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_read_timeout 900;
+        }
+
+        location /api {
+                proxy_pass http://192.168.0.30:8089;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-for $remote_addr;
+                proxy_set_header Host $host;
+                proxy_redirect off;
+                proxy_set_header Connection close;
+                proxy_pass_header Content-Type;
+                proxy_pass_header Content-Length;
+        }
+}
+```
 # ZendSkeletonApplication
 
 ## Introduction
@@ -221,8 +262,3 @@ $ composer cs-fix
 # Run PHPUnit tests:
 $ composer test
 ```
-
-# ZF3_REST_EtxJs_6.7_tutorial
-
-Актуальные версии Zend и ExtJs
-на Zend реализован REST API к базе, на ExtJs - просмотр и редактирование результатов
