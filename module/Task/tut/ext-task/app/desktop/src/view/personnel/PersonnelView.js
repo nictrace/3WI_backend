@@ -9,7 +9,7 @@ Ext.define('extTask.view.personnel.PersonnelView',{
 	store: {type: 'personnelviewstore'},
 	columns: [
 		{text: 'Id', dataIndex: 'id'},
-		{text: 'Name',dataIndex: 'name', width: 230,cell: {userCls: 'bold'}, editable: true},
+		{text: 'Name',dataIndex: 'name', width: 230,cell: {userCls: 'bold'}, editable: true, autoSizeColumn: true},
 		{
 			editor: {
 				xtype: 'combobox',
@@ -22,10 +22,30 @@ Ext.define('extTask.view.personnel.PersonnelView',{
 			width: 100,
 			sortable: false,
 			editable: true,
+			width: 280
 		},
-		{text: 'City', dataIndex: 'city', editable: false}
+		{   text: 'City',
+		    dataIndex: 'city',
+		    editable: false,
+		    width: 350,
+		    editable: false
+//		    editor: {xtype: 'selectfield',
+//			multiSelect: true,
+//			store: {type: 'citystore'},
+//			displayField: 'city',
+//			valueField: 'id'
+//		    }
+		},
+		{text: 'City Id', dataIndex: 'city_id', hidden: true, editable: true,
+                    editor: {xtype: 'selectfield',
+                        multiSelect: true,
+                        store: {type: 'citystore'},
+                        displayField: 'city',
+                        valueField: 'id' }
+ 		}
 	],
 	plugins: {
+	    gridfilters: true,
             grideditable: {
                 triggerEvent: 'childdoubletap',
                 enableDeleteButton: false,

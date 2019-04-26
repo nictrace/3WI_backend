@@ -37,8 +37,12 @@ class IndexController extends AbstractRestfulController
 	$cnf = $this->getEvent()->getApplication()->getConfig();
 	$adapter = new Adapter($cnf['db']);
 
-	//$statement = $adapter->query('SELECT customers.*,grades.grade FROM customers LEFT JOIN grades ON grades.user_id = customers.id');
-	$stmt = $adapter->query("SELECT customers.*,grades.grade,(SELECT REPLACE(GROUP_CONCAT(JSON_ARRAY(city)),'],[',',') AS 'json1' FROM cities WHERE id IN (SELECT `city_id` FROM `customer_city` WHERE `customer_id`= customers.id) ) AS 'city' FROM customers LEFT JOIN grades ON grades.user_id = customers.id ");
+	$sql = "SELECT customers.*,grades.grade, ".
+		"(SELECT GROUP_CONCAT(cities.id) FROM cities LEFT JOIN customer_city ON customer_city.city_id = cities.id WHERE customer_city.customer_id = customers.id) AS city_id,".
+		"(SELECT GROUP_CONCAT(cities.city) FROM cities LEFT JOIN customer_city ON customer_city.city_id = cities.id WHERE customer_city.customer_id = customers.id) AS city ".
+		"FROM customers LEFT JOIN grades ON grades.user_id = customers.id";
+	//$stmt = $adapter->query("SELECT customers.*,grades.grade,(SELECT REPLACE(GROUP_CONCAT(JSON_ARRAY(city)),'],[',',') AS 'json1' FROM cities WHERE id IN (SELECT `city_id` FROM `customer_city` WHERE `customer_id`= customers.id) ) AS 'city' FROM customers LEFT JOIN grades ON grades.user_id = customers.id ");
+	$stmt = $adapter->query($sql);
 	$results = $stmt->execute([]);
 
 	$row = $results->current();
@@ -64,6 +68,19 @@ class IndexController extends AbstractRestfulController
 	// $data - ассоциативный массив с данными клиента
 	$cnf = $this->getEvent()->getApplication()->getConfig();
         $adapter = new Adapter($cnf['db']);
+
+	if($data['city_id']){	// создать запрос и дернуть его для каждого элемента (а если он там был?)
+	    $stmt = $adapter->query("DELETE FROM customer_city WHERE customer_id = ?");
+	    $stmt->execute([$id]);
+	    $stmt = $adapter->query("INSERT INTO customer_city (customer_id, city_id) VALUES (?,?)");
+	    for($i=0; $i < count($data['city_id']); $i++){
+		$stmt->execute([intval($id),$data['city_id'][$i]]);
+	    }
+	    $stmt = $adapter->query("SELECT GROUP_CONCAT(cities.city) AS 'city'  FROM cities LEFT JOIN customer_city ON customer_city.city_id = cities.id WHERE customer_city.customer_id = ?");
+	    $rez = $stmt->execute([intval($id)]);
+	    $row = $rez->current();
+	    $data['city'] = $row['city'];
+	}
 	if($data['grade']){
             $statement = $adapter->query("INSERT INTO grades SET user_id = ?, grade = ? ON DUPLICATE KEY UPDATE grade = ?");
 	    try{
@@ -82,7 +99,6 @@ class IndexController extends AbstractRestfulController
                 $this->response->setStatusCode(409);
             }
 	}
-
 	$this->response->setContent(\json_encode($data));
 	return $this->response;
     }

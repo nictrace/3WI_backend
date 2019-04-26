@@ -12,11 +12,16 @@ Ext.define('extTask.view.home.LolStore', {
                 type: 'rest',
                 url: '/api/city',
                 reader: {
-                        type: 'json',
+                    type: 'json',
+		    rootProperty: 'payload'
                 },
                 writer: {
                     type: 'json',
                     method: 'post'
                 }
-        }
+        },
+	listeners: {
+		'add': function(store, records, index, eOpts){ console.log('adding...'); }
+	}
+
 });

@@ -8,7 +8,7 @@ Ext.define('extTask.view.main.nav.top.TopView', {
 			xtype: 'container', 
 			cls: 'topviewtext',
 			bind: { 
-				html: '{name}',
+				html: 'Catalog',
 				hidden: '{navCollapsed}' 
 			}
 		},

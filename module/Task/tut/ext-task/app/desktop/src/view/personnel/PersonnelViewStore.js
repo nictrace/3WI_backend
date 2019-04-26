@@ -4,7 +4,7 @@ Ext.define('extTask.view.personnel.PersonnelViewStore', {
 	autoLoad: true,
         autoSync: true,
 	fields: [
-		{name: 'id',  type: 'int', allowNull: true}, 'name', 'grade', 'city'
+		{name: 'id',  type: 'int', allowNull: true}, 'name', 'grade', 'city', 'city_id'
 	],
 	proxy: {
 		type: 'rest',
@@ -17,5 +17,6 @@ Ext.define('extTask.view.personnel.PersonnelViewStore', {
 		    type: 'json',
 		    method: 'post'
 		}
+
 	}
 });

@@ -21,20 +21,30 @@ class CityRestController extends AbstractRestfulController
 
 	public function getList(){
 
+	    $out = array();
 	    $this->db = new Adapter($this->getEvent()->getApplication()->getConfig()['db']);
 
 	    $cust = intval($this->params()->fromQuery('cust', 0));
 	    $start = intval($this->params()->fromQuery('start', 0));
 	    $limit = intval($this->params()->fromQuery('limit', 0));
 
+	    $out['success'] = true;
+	    if($limit){
+		$sql = "SELECT COUNT(id) AS 'total' FROM cities";
+		$stmt = $this->db->query($sql);
+		$rz = $stmt->execute();
+		$row = $rz->current();
+		$out['total'] = $row['total'];
+	    }
+
 	    $sql = "SELECT cities.* FROM cities";
 	    if($cust){
 		$sql .= " WHERE id IN (SELECT `city_id` FROM `customer_city` WHERE `customer_id`=?)";
-//		if($limit) $sql .= " LIMIT $start, $limit";	// что-то с чем-то не дружит при пажинации...
+		if($limit) $sql .= " LIMIT $start, $limit";	// что-то с чем-то не дружит при пажинации...
 		$statement = $this->db->query($sql);
 		$results = $statement->execute([$cust]);
 	    } else {
-//		if($limit) $sql .= " LIMIT $start, $limit";
+		if($limit) $sql .= " LIMIT $start, $limit";
 		$statement = $this->db->query($sql);
 		$results = $statement->execute([]);
 	    }
@@ -46,7 +56,12 @@ class CityRestController extends AbstractRestfulController
 		$row = $results->next();
 		if($row !== false) $full[] = $row;
 	    }
-	    $this->response->setContent(\json_encode($full));
+//Access-Control-Allow-Origin: *
+ 	    $this->response->getHeaders()->addHeaders(array(
+                'Access-Control-Allow-Origin:' => '*'
+	    ));
+ 	    $out['payload'] = $full;
+	    $this->response->setContent(\json_encode($out));
 	    return $this->response;
 	}
 
@@ -84,18 +99,23 @@ class CityRestController extends AbstractRestfulController
     }
 
     public function create($data){
+	$out = array('success'=>true);
 	$cnf = $this->getEvent()->getApplication()->getConfig();
         $adapter = new Adapter($cnf['db']);
         $statement = $adapter->query("INSERT INTO cities SET city = ?");
+
         try{
             $results = $statement->execute([$data['city']]);
 	    $this->response->setStatusCode(201);
+	    $out['id']= $adapter->getDriver()->getLastGeneratedValue();
         }
         catch(\Exception $e){
-            $this->response->setStatusCode(409);
+            $this->response->setStatusCode(200);	// не обслуживает баги
+	    $out['success']=false;
+	    $out['message']= $e->getMessage();
         }
 
-        $this->response->setContent(\json_encode($id));
+        $this->response->setContent(\json_encode($out));
 	// use getLastGeneratedValue();
         return $this->response;
     }

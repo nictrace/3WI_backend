@@ -6,7 +6,7 @@ Ext.define('extTask.view.home.LolGrid',{
 	viewModel: {type: 'homeviewmodel'},
         columns: [
                 {text: 'Id', dataIndex: 'id', hidden: true},
-                {text: 'City', dataIndex: 'city', width: 230, cell: {userCls: 'bold'}, editable: true}
+                {text: 'City', dataIndex: 'city', width: 230, cell: {userCls: 'bold'}, editable: true, autoSizeColumn: true}
 	],
 	store: {type: 'lolstore'},
         plugins: {
