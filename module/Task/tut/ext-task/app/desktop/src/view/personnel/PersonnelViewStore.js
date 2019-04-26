@@ -11,7 +11,7 @@ Ext.define('extTask.view.personnel.PersonnelViewStore', {
 		url: '/api/customer',
 		reader: {
 			type: 'json',
-			rootProperty: 'data.items'
+			rootProperty: 'data'
 		},
 		writer: {
 		    type: 'json',

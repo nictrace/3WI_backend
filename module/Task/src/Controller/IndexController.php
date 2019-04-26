@@ -65,6 +65,7 @@ class IndexController extends AbstractRestfulController
      */
     public function update($id, $data)
     {
+	$out = ['success'=>true];
 	// $data - ассоциативный массив с данными клиента
 	$cnf = $this->getEvent()->getApplication()->getConfig();
         $adapter = new Adapter($cnf['db']);
@@ -99,7 +100,9 @@ class IndexController extends AbstractRestfulController
                 $this->response->setStatusCode(409);
             }
 	}
-	$this->response->setContent(\json_encode($data));
+// выдать стандартный ответ
+	$out['data']=$data;
+	$this->response->setContent(\json_encode($out));
 	return $this->response;
     }
 }
