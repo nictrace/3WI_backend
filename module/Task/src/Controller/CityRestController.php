@@ -106,8 +106,9 @@ class CityRestController extends AbstractRestfulController
 
         try{
             $results = $statement->execute([$data['city']]);
-	    $this->response->setStatusCode(201);
-	    $out['id']= $adapter->getDriver()->getLastGeneratedValue();
+	    //$this->response->setStatusCode(201);
+	    //$out['id']= $adapter->getDriver()->getLastGeneratedValue();
+	    $out['data'] = ['id'=>$adapter->getDriver()->getLastGeneratedValue(),'city'=>$data['city']];
         }
         catch(\Exception $e){
             $this->response->setStatusCode(200);	// не обслуживает баги

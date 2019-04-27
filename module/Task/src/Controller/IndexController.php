@@ -34,6 +34,7 @@ class IndexController extends AbstractRestfulController
     }
 
     public function getList(){
+	$out = ['success'=>true];
 	$cnf = $this->getEvent()->getApplication()->getConfig();
 	$adapter = new Adapter($cnf['db']);
 
@@ -52,7 +53,8 @@ class IndexController extends AbstractRestfulController
 	  $row = $results->next();
 	  if($row !== false) $full[] = $row;
 	}
-	$this->response->setContent(\json_encode($full));
+	$out['data'] = $full;
+	$this->response->setContent(\json_encode($out));
 	return $this->response;
     }
 
@@ -88,7 +90,8 @@ class IndexController extends AbstractRestfulController
                 $results = $statement->execute([$id, $data['grade'], $data['grade']]);
             }
             catch(\Exception $e){
-	        $this->response->setStatusCode(409);
+//	        $this->response->setStatusCode(409);
+		$out['success'] = false;
 	    }
 	}
 	if($data['name']){
@@ -97,7 +100,8 @@ class IndexController extends AbstractRestfulController
                 $results = $statement->execute([$data['name'], $id]);
             }
             catch(\Exception $e){
-                $this->response->setStatusCode(409);
+		$out['success'] = false;
+//                $this->response->setStatusCode(409);
             }
 	}
 // выдать стандартный ответ

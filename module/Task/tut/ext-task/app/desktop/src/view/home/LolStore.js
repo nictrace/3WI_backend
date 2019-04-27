@@ -8,20 +8,26 @@ Ext.define('extTask.view.home.LolStore', {
         fields: [
                 {name: 'id',  type: 'int', allowNull: true}, 'city'
         ],
-        proxy: {
+        proxy: { //type: 'customproxy',
                 type: 'rest',
                 url: '/api/city',
                 reader: {
                     type: 'json',
-		    rootProperty: 'payload'
+		    rootProperty: 'payload',
+		    messageProperty: 'message'
                 },
                 writer: {
                     type: 'json',
-                    method: 'post'
+                    method: 'post',
+		    listeners: {
+			exception: {
+			    fn: function(u,d){ console.log('exception'); console.log(u); }
+			}
+		    }
                 }
         },
 	listeners: {
-		'add': function(store, records, index, eOpts){ console.log('adding...'); }
+		'add': function(store, records, index, eOpts){ console.log('adding...'); console.log(records); }
 	}
 
 });

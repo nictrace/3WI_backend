@@ -3,6 +3,7 @@ Ext.define('extTask.view.personnel.CityStore', {
 	alias: 'store.citystore',
 	autoLoad: true,
         autoSync: true,
+	pageSize: 0,
 	fields: [
 		{name: 'id',  type: 'int', allowNull: true},
 		'city'

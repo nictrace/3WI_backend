@@ -1,7 +1,7 @@
 Ext.define('extTask.Application', {
 	extend: 'Ext.app.Application',
 	name: 'extTask',
-	requires: ['extTask.*', 'Ext.data.proxy.Rest', 'Ext.grid.plugin.Editable'],
+	requires: ['extTask.*', 'Ext.data.proxy.Rest', 'Ext.grid.plugin.Editable', 'Ext.grid.filters.Plugin'],
 	defaultToken: 'homeview',
 
 	removeSplash: function () {
