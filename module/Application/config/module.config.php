@@ -10,10 +10,21 @@ namespace Application;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 use Zend\ServiceManager\Factory\InvokableFactory;
+//use Controller\Factory\IndexControllerFactory;
 
 return [
     'router' => [
         'routes' => [
+            'map' => [
+		'type' => Segment::class,
+		'options' => [
+		    'route' => '/map',
+		    'defaults' => [
+			'controller' => Controller\IndexController::class,
+			'action' => 'map',
+		    ],
+                ],
+	    ],
             'home' => [
                 'type' => Literal::class,
                 'options' => [
@@ -38,7 +49,7 @@ return [
     ],
     'controllers' => [
         'factories' => [
-            Controller\IndexController::class => InvokableFactory::class,
+            Controller\IndexController::class => Controller\Factories\IndexControllerFactory::class, //InvokableFactory::class,
         ],
     ],
     'view_manager' => [
@@ -50,6 +61,7 @@ return [
         'template_map' => [
             'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
+            'map/map'		      => __DIR__ . '/../view/application/map.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
         ],
