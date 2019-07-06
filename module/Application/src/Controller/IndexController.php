@@ -17,7 +17,7 @@ class IndexController extends AbstractActionController
     private $container;
 
     public function __construct(ContainerInterface $object) {
-	$this->container = $object;
+	    $this->container = $object;
     }
 
     public function indexAction()
@@ -28,11 +28,28 @@ class IndexController extends AbstractActionController
 
     public function mapAction()
     {
-	$am = $this->container->get('Config');
-	$service = new TestService();
-	$this->container->setService(TestService::class, $service);
-	//print_r($am['db']);
-        echo($service->test());
-	return new ViewModel;
+	    $am = $this->container->get('Config');
+        $db = new Adapter($am['db']);
+        $sql = "SELECT dumps.* FROM dumps";
+        $statement = $db->query($sql);
+        $results = $statement->execute();
+        $row = $results->current();
+        $full[] = $row;
+        $this->response->getHeaders()->addHeaders(array(
+            'Access-Control-Allow-Origin:' => '*'
+        ));
+
+        $out['payload'] = $full;
+        $this->response->setContent(\json_encode($out));
+        return $this->response;
+
+	    //$service = new TestService();
+	    //$this->container->setService(TestService::class, $service);
+	    //print_r($am['db'])echo($service->test());
+//	    return new ViewModel(array('city'=>'yaroslavl'));
+
+        $out['payload'] = $full;
+        $this->response->setContent(\json_encode($out));
+        return $this->response;
     }
 }

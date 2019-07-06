@@ -53,8 +53,8 @@ class CityRestController extends AbstractRestfulController
             $full[] = $row;
             $name = $row['name'];
             while($results->key() != $results->count()){
-		$row = $results->next();
-		if($row !== false) $full[] = $row;
+		    $row = $results->next();
+		    if($row !== false) $full[] = $row;
 	    }
 //Access-Control-Allow-Origin: *
  	    $this->response->getHeaders()->addHeaders(array(

@@ -4,8 +4,8 @@ namespace Application\Service;
 
 class TestService
 {
-    public function test()
+    public function getPoints()
     {
-	return json_encode(array('map'=>'Yaroslavl', 'zoom'=> 5));
+	    return json_encode(array('map'=>'Yaroslavl', 'zoom'=> 5));
     }
 }
