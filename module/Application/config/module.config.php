@@ -9,12 +9,57 @@ namespace Application;
 
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
+use Zend\Router\Http\Method;
 use Zend\ServiceManager\Factory\InvokableFactory;
 //use Controller\Factory\IndexControllerFactory;
 
 return [
     'router' => [
         'routes' => [
+            'photo' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/photo',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action' => 'photo',
+                    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'myroute1get' => [			// This child route will match GET request
+                        'type' => Method::class,
+                        'options' => [
+                            'verb' => 'get',
+                            'defaults' => [
+                                'controller' => Controller\IndexController::class,
+                                'action'     => 'getfoto'
+                            ],
+                        ],
+                    ],
+                    'myroute1post' => [			// This child route will match POST request
+                        'type' => Method::class,
+                        'options' => [
+                            'verb' => 'post',
+                            'defaults' => [
+                                'controller' => Controller\IndexController::class,
+                                'action'     => 'savefoto'
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'save' => [
+                'type'=> Method::class,
+                'options' => [
+                    'route' => '/save',
+                    'verb' => 'post',
+                    'defaults' => [
+                        'controller' => Controller\IndexController::class,
+                        'action'     => 'savepoint'
+                    ],
+                ],
+            ],
             'map' => [
 		'type' => Segment::class,
 		'options' => [
@@ -23,6 +68,29 @@ return [
 			'controller' => Controller\IndexController::class,
 			'action' => 'map',
 		    ],
+                ],
+                'may_terminate' => true,
+                'child_routes' => [
+                    'myroute2get' => [                  // This child route will match GET request
+                        'type' => Method::class,
+                        'options' => [
+                            'verb' => 'get',
+                            'defaults' => [
+                                'controller' => Controller\IndexController::class,
+                                'action'     => 'map'
+                            ],
+                        ],
+                    ],
+                    'myroute2post' => [                 // This child route will match POST request
+                        'type' => Method::class,
+                        'options' => [
+                            'verb' => 'post',
+                            'defaults' => [
+                                'controller' => Controller\IndexController::class,
+                                'action'     => 'savepoint'
+                            ],
+                        ],
+                    ],
                 ],
 	    ],
             'home' => [

@@ -1,13 +1,20 @@
-<div class="jumbotron">
-    <h1>Welcome to <span class="zf-green">Zend Framework</span></h1>
 
-    <p>
-        Congratulations! You have successfully installed the
-        <a href="https://github.com/zendframework/ZendSkeletonApplication" target="_blank">ZF Skeleton Application</a>.
-        You are currently running Zend Framework version <?= \Application\Module::VERSION ?>.
-        This skeleton can serve as a simple starting point for you to begin
-        building your application on ZF.
-    </p>
+<script type="text/javascript">
+$(document).ready(function() {
+    var mymap = L.map('mapid').setView([57.64, 39.89], 14);
+
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(mymap);
+});
+
+</script>
+
+
+
+ <div class="jumbotron">
+
+    <div id="mapid" class="map"></div>
 
     <p><a class="btn btn-success btn-lg" href="https://github.com/zendframework/zendframework" target="_blank">Fork Zend Framework on GitHub &raquo;</a></p>
 </div>
