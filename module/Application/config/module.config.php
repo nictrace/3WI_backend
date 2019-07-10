@@ -16,47 +16,15 @@ use Zend\ServiceManager\Factory\InvokableFactory;
 return [
     'router' => [
         'routes' => [
-            'photo' => [
+            'dumps' => [
                 'type' => Segment::class,
                 'options' => [
-                    'route' => '/photo',
+                    'route'    => '/api/dump[/:id]',
+                    'constraints' => array(
+                        'id'     => '[0-9]+',
+                    ),
                     'defaults' => [
-                        'controller' => Controller\IndexController::class,
-                        'action' => 'photo',
-                    ],
-                ],
-                'may_terminate' => true,
-                'child_routes' => [
-                    'myroute1get' => [			// This child route will match GET request
-                        'type' => Method::class,
-                        'options' => [
-                            'verb' => 'get',
-                            'defaults' => [
-                                'controller' => Controller\IndexController::class,
-                                'action'     => 'getfoto'
-                            ],
-                        ],
-                    ],
-                    'myroute1post' => [			// This child route will match POST request
-                        'type' => Method::class,
-                        'options' => [
-                            'verb' => 'post',
-                            'defaults' => [
-                                'controller' => Controller\IndexController::class,
-                                'action'     => 'savefoto'
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-            'save' => [
-                'type'=> Method::class,
-                'options' => [
-                    'route' => '/save',
-                    'verb' => 'post',
-                    'defaults' => [
-                        'controller' => Controller\IndexController::class,
-                        'action'     => 'savepoint'
+                        'controller' => Controller\DumpController::class,
                     ],
                 ],
             ],
@@ -117,7 +85,8 @@ return [
     ],
     'controllers' => [
         'factories' => [
-            Controller\IndexController::class => Controller\Factories\IndexControllerFactory::class, //InvokableFactory::class,
+            Controller\IndexController::class => Controller\Factories\IndexControllerFactory::class,
+            Controller\DumpController::class =>  Controller\Factories\IndexControllerFactory::class,
         ],
     ],
     'view_manager' => [

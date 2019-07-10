@@ -50,7 +50,7 @@ class IndexController extends AbstractActionController
             $sql = "INSERT INTO dumps ('lat','len','violationType','level',) VALUES (?,?,?,?)";
                 $statement = $this->mydb->query($sql);
 		$cust = [$params['currentPlacemark']['coordinates'][0], $params['currentPlacemark']['coordinates'][1], 
-			[$params['currentPlacemark']['violationType'], $params['currentPlacemark']['level']];
+			$params['currentPlacemark']['violationType'], $params['currentPlacemark']['level']];
                 try{
                     $results = $statement->execute([$cust]);
 		}
