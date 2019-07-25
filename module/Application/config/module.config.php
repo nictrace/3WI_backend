@@ -11,11 +11,46 @@ use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
 use Zend\Router\Http\Method;
 use Zend\ServiceManager\Factory\InvokableFactory;
-//use Controller\Factory\IndexControllerFactory;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\DBAL\Driver\PDOMySql\Driver as PDOMySQLDriver;
 
 return [
     'router' => [
         'routes' => [
+            'upload' => [
+                'type'=>Literal::class,
+                'options' => [
+                    'route'=> '/upload',
+                    'defaults'=> [
+                        'controller'=> Controller\IndexController::class,
+                        'action'=> 'upload',
+                    ],
+                ],
+            ],
+            'level' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/api/level[/:id]',
+                    'constraints' => array(
+                        'id'     => '[0-9]+',
+                    ),
+                    'defaults' => [
+                        'controller' => Controller\LevelController::class,
+                    ],
+                ],
+            ],
+            'privileges' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/api/privileges[/:id]',
+                    'constraints' => array(
+                        'id'     => '[0-9]+',
+                    ),
+                    'defaults' => [
+                        'controller' => Controller\PrivilegesController::class,
+                    ],
+                ],
+            ],
             'dumps' => [
                 'type' => Segment::class,
                 'options' => [
@@ -87,6 +122,8 @@ return [
         'factories' => [
             Controller\IndexController::class => Controller\Factories\IndexControllerFactory::class,
             Controller\DumpController::class =>  Controller\Factories\IndexControllerFactory::class,
+	    Controller\PrivilegesController::class => Controller\Factories\IndexControllerFactory::class,
+            Controller\LevelController::class => Controller\Factories\IndexControllerFactory::class,
         ],
     ],
     'view_manager' => [
@@ -106,4 +143,31 @@ return [
             __DIR__ . '/../view',
         ],
     ],
+    'doctrine' => [
+	'connection' => [
+            'orm_default' => [
+                'driverClass' => PDOMySqlDriver::class,
+                'params' => [
+                    'host'     => 'localhost',
+                    'user'     => 'root',
+                    'password' => 'biberon',
+                    'dbname'   => 'zend',
+                    'charset' => 'utf8',
+		    'unix_socket'=> '/var/run/mysqld/mysqld.sock',
+                ]
+            ]
+	],
+        'driver' => [
+            __NAMESPACE__ . '_driver' => [
+                'class' => AnnotationDriver::class,
+                'cache' => 'array',
+                'paths' => [__DIR__ . '/../src/Entity']
+            ],
+            'orm_default' => [
+                'drivers' => [
+                    __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver'
+                ]
+            ]
+        ]
+    ]
 ];

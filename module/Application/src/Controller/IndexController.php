@@ -103,8 +103,31 @@ class IndexController extends AbstractActionController
         return $this->response;
     }
 
-    public function photoAction()
+    public function uploadAction()
     {
+	// only for POST
+	if ($this->getRequest()->isPost()) {
+	    $files = $this->params()->fromFiles();
+	    // получаем array по которому нужно пройтись
+	    $x = 1;
+	    $id = $this->params()->fromPost('id', 0);
+	    foreach($files as $one){
+		if($one['error']==0){
+		    if($one['type'] == 'image/jpeg'){
+			$dz = __DIR__.'/../../../../upload/'.$id;
+			if(!is_dir($dz)){
+			   mkdir($dz);
+			}
+			move_uploaded_file($one['tmp_name'], $dz.'/'.$x.'.jpg');
+			$x++;
+		    }
+		}
+	    }
+	    print_r($this->params()->fromPost('id', 0));
+	}
+	else {
+		echo "GET?";
+	}
         $this->response->setContent(\json_encode([]));
         return $this->response;
     }
