@@ -39,6 +39,18 @@ return [
                     ],
                 ],
             ],
+            'user' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/api/user[/:id]',
+                    'constraints' => array(
+                        'id'     => '[0-9]+',
+                    ),
+                    'defaults' => [
+                        'controller' => Controller\UserController::class,
+                    ],
+                ],
+            ],
             'privileges' => [
                 'type' => Segment::class,
                 'options' => [
@@ -120,6 +132,7 @@ return [
     ],
     'controllers' => [
         'factories' => [
+	    Controller\UserController::class => Controller\Factories\IndexControllerFactory::class,
             Controller\IndexController::class => Controller\Factories\IndexControllerFactory::class,
             Controller\DumpController::class =>  Controller\Factories\IndexControllerFactory::class,
 	    Controller\PrivilegesController::class => Controller\Factories\IndexControllerFactory::class,
