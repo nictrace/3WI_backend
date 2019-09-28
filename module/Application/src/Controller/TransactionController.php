@@ -17,7 +17,7 @@ use Zend\Http\Headers;
 use Zend\Db\Adapter\Adapter;
 use Zend\Json\Json;
 
-class UserController extends AbstractRestfulController
+class TransactionController extends AbstractRestfulController
 {
         private $db;
         private $container;
@@ -27,7 +27,7 @@ class UserController extends AbstractRestfulController
         public function __construct(ContainerInterface $object){
             $this->container = $object;
             $this->em = $this->container->get('doctrine.entitymanager.orm_default');
-            $this->repo = $this->em->getRepository(\Application\Entity\User::class);
+            $this->repo = $this->em->getRepository(\Application\Entity\Transaction::class);
             $this->db = new Adapter($this->container->get('Config')['db']);
         }
         public function options(){
@@ -46,8 +46,9 @@ class UserController extends AbstractRestfulController
 	    $one = [];
 	    if(is_object($lev)){
 		$one['id'] = $lev->getId();
-		$one['name'] = $lev->getName();
-		$one['phone'] = $lev->getPhone();
+		$one['user_id'] = $lev->getUserId();
+		$one['container_id'] = $lev->getContainerId();
+		$one['weight'] = $lev->getWeight();
 		//$one['created'] = $lev->getCreated();
 
 		//$m = $lev->getPrivs()->slice(0);	// взять все данные

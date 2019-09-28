@@ -27,6 +27,16 @@ return [
                     ],
                 ],
             ],
+            'login' => [
+                'type'=>Literal::class,
+                'options' => [
+                    'route'=> '/login',
+                    'defaults'=> [
+                        'controller'=> Controller\IndexController::class,
+                        'action'=> 'login',
+                    ],
+                ],
+            ],
             'level' => [
                 'type' => Segment::class,
                 'options' => [
@@ -36,6 +46,18 @@ return [
                     ),
                     'defaults' => [
                         'controller' => Controller\LevelController::class,
+                    ],
+                ],
+            ],
+	    'transactions' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/api/transactions[/:id]',
+                    'constraints' => array(
+                        'id'     => '[0-9]+',
+                    ),
+                    'defaults' => [
+                        'controller' => Controller\TransactionController::class,
                     ],
                 ],
             ],
@@ -137,6 +159,7 @@ return [
             Controller\DumpController::class =>  Controller\Factories\IndexControllerFactory::class,
 	    Controller\PrivilegesController::class => Controller\Factories\IndexControllerFactory::class,
             Controller\LevelController::class => Controller\Factories\IndexControllerFactory::class,
+	    Controller\TransactionController::class => Controller\Factories\IndexControllerFactory::class,
         ],
     ],
     'view_manager' => [

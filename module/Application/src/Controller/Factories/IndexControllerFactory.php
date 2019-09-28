@@ -8,6 +8,7 @@ use Application\Controller\DumpController;
 use Application\Controller\PrivilegesController;
 use Application\Controller\LevelController;
 use Application\Controller\UserController;
+use Application\Controller\TransactionController;
 
 // Factory class
 class IndexControllerFactory implements FactoryInterface
@@ -20,6 +21,7 @@ class IndexControllerFactory implements FactoryInterface
         elseif($requestedName == 'Application\Controller\IndexController') return new IndexController($container);
 	elseif($requestedName == 'Application\Controller\LevelController') return new LevelController($container);
 	elseif($requestedName == 'Application\Controller\UserController') return new UserController($container);
+	elseif($requestedName == 'Application\Controller\TransactionController') return new TransactionController($container);
 	else return new PrivilegesController($container);
     }
 }

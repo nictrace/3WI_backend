@@ -69,4 +69,8 @@ class User
 	$this->created = $val;
 	return $this;
     }
+    public function check_pass($pass){
+        if($this->pass == $pass) return true;
+        else return false;
+    }
 }

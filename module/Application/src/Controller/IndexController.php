@@ -22,10 +22,20 @@ class IndexController extends AbstractActionController
     private $container;
     private $mydb;
 
-    public function __construct(ContainerInterface $object) {
-	    $this->container = $object;
+        private $em;
+        private $repo;
+
+        public function __construct(ContainerInterface $object){
+            $this->container = $object;
+            $this->em = $this->container->get('doctrine.entitymanager.orm_default');
+            $this->repo = $this->em->getRepository(\Application\Entity\User::class);
             $this->mydb = new Adapter($this->container->get('Config')['db']);
-    }
+        }
+
+  //  public function __construct(ContainerInterface $object) {
+///	    $this->container = $object;
+   //         $this->mydb = new Adapter($this->container->get('Config')['db']);
+    //}
 
     public function indexAction()
     {
@@ -138,5 +148,13 @@ class IndexController extends AbstractActionController
     public function savefotoAction(){
         $this->response->setContent(\json_encode(['action'=>'savefoto']));
         return $this->response;
+    }
+    public function loginAction(){
+	if ($this->getRequest()->isPost()) {
+	    $phone = $this->params()->fromPost('phone', '0');
+	    $pass = $this->params()->fromPost('pass', '');
+	    $user = $this->repo->findOneBy(['phone'=>$phone]);
+	    print_r($user);
+	}
     }
 }
