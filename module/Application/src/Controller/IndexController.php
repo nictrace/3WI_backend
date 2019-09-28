@@ -16,26 +16,33 @@ use Zend\View\Model\JsonModel;
 use Zend\Http\Headers;
 use Zend\Db\Adapter\Adapter;
 use Zend\Json\Json;
+use Zend\Session\SessionManager;
 
 class IndexController extends AbstractActionController
 {
-    private $container;
-    private $mydb;
-
+	private $container;
+	private $mydb;
         private $em;
         private $repo;
+	private $sessionContainer;
 
         public function __construct(ContainerInterface $object){
             $this->container = $object;
             $this->em = $this->container->get('doctrine.entitymanager.orm_default');
             $this->repo = $this->em->getRepository(\Application\Entity\User::class);
             $this->mydb = new Adapter($this->container->get('Config')['db']);
+	    // Retrieve an instance of the session manager from the service manager.
+	    $sessionManager = $this->container->get(SessionManager::class);
+	    $this->sessionContainer = new \Zend\Session\Container('ContainerNamespace', $sessionManager);
         }
 
-  //  public function __construct(ContainerInterface $object) {
-///	    $this->container = $object;
-   //         $this->mydb = new Adapter($this->container->get('Config')['db']);
-    //}
+        public function options(){
+            $this->response->getHeaders()->addHeaders(array('Access-Control-Allow-Origin' => '*',
+                'Access-Control-Allow-Methods'=>'PUT, GET, POST, OPTIONS, HEAD, DELETE',
+                'Access-Control-Allow-Headers'=>'Origin, X-Requested-With, Content-Type, Accept'));
+            $this->response->setStatusCode(204);
+            return $this->getResponse();
+        }
 
     public function indexAction()
     {
@@ -149,12 +156,40 @@ class IndexController extends AbstractActionController
         $this->response->setContent(\json_encode(['action'=>'savefoto']));
         return $this->response;
     }
+
     public function loginAction(){
+	$this->response->getHeaders()->addHeaders(array('Access-Control-Allow-Origin' => '*', 'Content-Type'=>'application/json', 'Access-Control-Allow-Headers'=>'Origin, X-Requested-With, Content-Type, Accept'));
 	if ($this->getRequest()->isPost()) {
-	    $phone = $this->params()->fromPost('phone', '0');
-	    $pass = $this->params()->fromPost('pass', '');
-	    $user = $this->repo->findOneBy(['phone'=>$phone]);
-	    print_r($user);
+	    $data = \Zend\Json\Json::decode($this->request->getContent());
+            $phone = $data->phone;
+	    $user = $this->repo->findOneByPhone($phone);
+	    if(!is_null($user)){
+		$rez = $user->check_pass($data->pass);
+                if($rez) {
+		    // add uid to session
+		    $this->sessionContainer->uid = $user->getId();
+		    $this->response->setContent(\json_encode($user->toArray()));
+		}
+		else {
+			$this->response->setStatusCode(403);
+			$this->response->setContent(\json_encode(['success'=>false, 'message'=>'Неверный номер или пароль'])); }
+                	return $this->response;
+	    }
+	    else {
+		$this->response->setStatusCode(403);
+		$this->response->setContent(\json_encode(['success'=>false, 'message'=>'Неверный номер или пароль']));
+	    }
+            return $this->response;
+	    //print_r($user);
 	}
+	else { // debug!
+		//$user = $this->repo->findOneByPhone("9201112233");
+		$this->response->setStatusCode(404);
+		$this->response->setContent("Not found");
+		return $this->response;
+	}
+	$this->response->setContent(\json_encode([]));
+	//$this->response->getHeaders()->addHeaders(array('Access-Control-Allow-Origin' => '*', 'Content-Type'=>'application/json'));
+	return $this->response;
     }
 }

@@ -62,6 +62,13 @@ class User
 	$this->phone = $val;
 	return $this;
     }
+    public function getMail(){
+        return $this->mail;
+    }
+    public function setMail($val){
+        $this->mail = $val;
+        return $this;
+    }
     public function getCreated(){
 	return $this->created;
     }
@@ -70,7 +77,15 @@ class User
 	return $this;
     }
     public function check_pass($pass){
-        if($this->pass == $pass) return true;
-        else return false;
+        return ($this->pass == $pass);
+    }
+
+    public function toArray()
+    {
+        $out = [];
+        $out['id'] = $this->getId();
+	$out['phone'] = $this->getPhone();
+	$out['mail'] = $this->getMail();
+	return $out;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
-use Application\Entity\Dumps;
+use Application\Entity\User;
 /**
  * This is the custom repository class for User entity.
  */
@@ -28,10 +28,22 @@ class UsersRepository extends EntityRepository
         $queryBuilder = $entityManager->createQueryBuilder();
 
         $queryBuilder->select('u')
-            ->from(Dumps::class, 'u')
+            ->from(User::class, 'u')
 	    ->where('u.id', $id)
             ->orderBy('u.created', 'DESC');
 
         return $queryBuilder->getQuery();
+    }
+
+    public function findOneByPhone($phone){
+	$em = $this->getEntityManager();
+	$queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('u')
+            ->from(User::class, 'u')
+            ->where('u.phone', $phone)
+            ->orderBy('u.created', 'DESC');
+
+	return $queryBuilder->getQuery()->getResult();
     }
 }
