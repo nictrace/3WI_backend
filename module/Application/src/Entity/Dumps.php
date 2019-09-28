@@ -51,25 +51,33 @@ class Dumps
      */
     protected $paper;
     /**
-     * @ORM\Column(name="household", type="boolean")
+     * @ORM\Column(name="cloth", type="boolean")
      */
-    protected $household;
+    protected $cloth;
     /**
-     * @ORM\Column(name="construction", type="boolean")
+     * @ORM\Column(name="tetrapack", type="boolean")
      */
-    protected $construction;
+    protected $tetrapack;
     /**
-     * @ORM\Column(name="other", type="boolean")
+     * @ORM\Column(name="house_tech", type="boolean")
      */
-    protected $other;
+    protected $houseTech;
     /**
-     * @ORM\Column(name="created", type="datetime")
+     * @ORM\Column(name="lamps", type="boolean")
      */
-    protected $created;
+    protected $lamps;
     /**
-     * @ORM\Column(name="renew", type="datetime")
+     * @ORM\Column(name="batteries", type="boolean")
      */
-    protected $renew;
+    protected $batteries;
+    /**
+     * @ORM\Column(name="time_on", type="string", options={"default":"00:00:00"})
+     */
+    protected $timeOn;
+    /**
+     * @ORM\Column(name="time_off", type="string",  options={"default":"23:59:59"})
+     */
+    protected $timeOff;
     /**
      * @ORM\Column(name="reporter", type="integer")
      */
@@ -272,66 +280,84 @@ class Dumps
 	$this->paper = $val;
 	return $this;
     }
-    public function getHousehold()
+    public function getCloth()
     {
-	return $this->household;
+	return $this->cloth;
     }
-    public function setHousehold($val)
+    public function setCloth($val)
     {
-	$this->household = $val;
+	$this->cloth = $val;
 	return $this;
     }
-    public function getConstruction()
+    public function getTetrapack()
     {
-	return $this->construction;
+	return $this->tetrapack;
     }
-    public function setConstruction($val)
+    public function setTetrapack($val)
     {
-	$this->construction = $val;
+	$this->tetrapack = $val;
 	return $this;
     }
-    public function getOther()
+    public function getHouseTech()
     {
-	return $this->other;
+	return $this->houseTech;
     }
-    public function setOther($val)
+    public function setHouseTech($val)
     {
-	$this->other = $val;
+	$this->houseTech = $val;
 	return $this;
+    }
+    public function getLamps()
+    {
+        return $this->lamps;
+    }
+    public function setLamps($val)
+    {
+        $this->lamps = $val;
+        return $this;
+    }
+    public function getBatteries()
+    {
+        return $this->batteries;
+    }
+    public function setBatteries($val)
+    {
+        $this->batteries = $val;
+        return $this;
     }
     /**
      * Returns the date when this post was created.
      * @return string
      */
-    public function getCreated()
+    public function getTimeOn()
     {
-        return $this->created;
+        return $this->timeOn;
     }
 
     /**
      * Sets the date when this post was created.
      * @param string $dateCreated
      */
-    public function setCreated($created)
+    public function setTimeOn($created)
     {
-        $this->created = (string)$created;
+        $this->timeOn = (string)$created;
     }
 
     /*
      * Returns renew time
      * @return string
      */
-    public function getRenew()
+    public function getTimeOff()
     {
-        return $this->renew;
+        return $this->timeOff;
     }
     /**
      * Sets associated post.
      * param datetime $val
      */
-    public function setRenew($val)
+    public function setTimeOff($val)
     {
-        $this->renew = (string)$val;
+        $this->timeOff = (string)$val;
         return $this;
     }
     public function getReporter()
@@ -400,17 +426,19 @@ class Dumps
 	$out['metal'] = $this->getMetal();
         $out['glass'] = $this->getGlass();
 	$out['paper'] = $this->getPaper();
-	$out['household'] = $this->getHousehold();
-	$out['construction'] = $this->getConstruction();
-	$out['other'] = $this->getOther();
-	$out['created'] = $this->getCreated();
-	$out['renew'] = $this->getRenew();
-	$out['reporter'] = $this->getReporter();
+	$out['cloth'] = $this->getCloth();
+	$out['tetrapack'] = $this->getTetrapack();
+	$out['house_tech'] = $this->getHouseTech();
+	$out['lamps'] = $this->getLamps();
+	$out['batteries'] = $this->getBatteries();
+	$out['time_on'] = $this->getTimeOn();
+	$out['time_off'] = $this->getTimeOff();
+	//$out['reporter'] = $this->getReporter();
 	$out['comment'] = $this->getComment();
 	$out['state'] = $this->getState();
 	$out['level'] = $this->getLevel();
-	$out['price'] = $this->getPrice();
-	$out['volume'] = $this->getVolume();
+	//$out['price'] = $this->getPrice();
+	//$out['volume'] = $this->getVolume();
 	return $out;
     }
 }

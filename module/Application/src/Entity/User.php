@@ -86,6 +86,7 @@ class User
         $out['id'] = $this->getId();
 	$out['phone'] = $this->getPhone();
 	$out['mail'] = $this->getMail();
+	$out['name'] = $this->getName();
 	return $out;
     }
 }

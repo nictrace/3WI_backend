@@ -64,19 +64,24 @@ class UserController extends AbstractRestfulController
 	return $this->response;
     }
     public function get($id){
+	$this->response->getHeaders()->addHeaders(array('Access-Control-Allow-Origin' => '*', 'Content-Type'=>'application/json'));
 	$data = $this->repo->findOneById($id);
-	$total = [];
-	$total['id'] = $data->getId();
-	$total['name'] = $data->getName();
-	$total['phone'] = $data->getPhone();
-	//$priv = [];
-	//$m = $data->getPrivs()->slice(0);
-        //foreach($m as $p){
-        //    array_push($priv, $p->getName());
-        //}
-	//$total['privileges'] = $priv;
-        $this->response->getHeaders()->addHeaders(array('Access-Control-Allow-Origin' => '*', 'Content-Type'=>'application/json'));
-        $this->response->setContent(\json_encode($total));
+	if(!is_null($data)){
+	    // checking for extra parameters
+	    $stat = intval($this->params()->fromQuery('stat', 0));
+	    if($stat > 0){
+		// get stat and display it
+		$stats = '100500 of plastic bottles';
+	    }
+            else $stats = '';
+
+	    $userinfo = $data->toArray();
+	    $userinfo['stat'] = $stats;
+            $this->response->setContent(\json_encode($userinfo));
+	}
+        else{
+	     $this->response->setContent(\json_encode(\json_encode(['success'=>false, 'message'=>'Пользователь с таким id не зарегистрирован'])));
+        }
         return $this->response;
     }
 }

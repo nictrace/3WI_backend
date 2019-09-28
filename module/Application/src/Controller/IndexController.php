@@ -158,7 +158,8 @@ class IndexController extends AbstractActionController
     }
 
     public function loginAction(){
-	$this->response->getHeaders()->addHeaders(array('Access-Control-Allow-Origin' => '*', 'Content-Type'=>'application/json', 'Access-Control-Allow-Headers'=>'Origin, X-Requested-With, Content-Type, Accept'));
+	$this->response->getHeaders()->addHeaders(array('Access-Control-Allow-Origin' => '*', 
+	    'Content-Type'=>'application/json', 'Access-Control-Allow-Headers'=>'Origin, X-Requested-With, Content-Type, Accept'));
 	if ($this->getRequest()->isPost()) {
 	    $data = \Zend\Json\Json::decode($this->request->getContent());
             $phone = $data->phone;
@@ -184,7 +185,7 @@ class IndexController extends AbstractActionController
 	}
 	else { // debug!
 		//$user = $this->repo->findOneByPhone("9201112233");
-		$this->response->setStatusCode(404);
+		//$this->response->setStatusCode(404);
 		$this->response->setContent("Not found");
 		return $this->response;
 	}
