@@ -2,6 +2,7 @@
 namespace Application\Repository;
 use Doctrine\ORM\EntityRepository;
 use Application\Entity\Dumps;
+use Application\Service\TestService;
 /**
  * This is the custom repository class for User entity.
  */
@@ -25,11 +26,19 @@ class DumpsRepository extends EntityRepository
     }
 */
     public function findFilteredBy($ord){
+
+        $svc = new TestService();
+
     	$entityManager = $this->getEntityManager();
 	$queryBuilder = $entityManager->createQueryBuilder();
 
 	$queryBuilder->select('d')->from(Dumps::class, 'd');
 
+	foreach($svc->getTypes() as $onetype){
+	    if(array_key_exists($onetype, $ord))
+		$queryBuilder->orWhere('d.'.$onetype.' = 1');
+	}
+	/*
 	if(array_key_exists('plastic', $ord))
 	    $queryBuilder->orWhere('d.plastic =1');
         if(array_key_exists('metal', $ord))
@@ -48,7 +57,7 @@ class DumpsRepository extends EntityRepository
             $queryBuilder->orWhere('d.lamps =1');
         if(array_key_exists('batteries', $ord))
             $queryBuilder->orWhere('d.batteries =1');
-
+	*/
 	return $queryBuilder->getQuery()->getResult();
     }
 

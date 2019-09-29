@@ -71,18 +71,21 @@ class UserController extends AbstractRestfulController
 	if(!is_null($udata)){
 	    // checking for extra parameters
 	    $stat = intval($this->params()->fromQuery('stat', 0));
+	    $repoTrans = $this->em->getRepository(\Application\Entity\Transaction::class);
 
-	    if($stat > 0){
+	    if($stat == 1 ){
 		// get stat and display it
-		$stats = '100500 of plastic bottles';
-		$repoTrans = $this->em->getRepository(\Application\Entity\Transaction::class);
 		$data = $repoTrans->findBy(['userId'=>$id]);
 		$arstats = [];
 		foreach($data as $tranz){
 		  $arstats[] = $tranz->toArray();
 		}
 	    }
-            else $stats = '';
+	    else if($stat == 2){
+		$data = $repoTrans->findSummed($id, 2); // mode 2: sum mass
+	        $arstats = ['total_weight' => $data];
+	    }
+            else $arstats = [];
 
 	    //$userinfo = $data->toArray();
 	    $userinfo['stat'] = $arstats;
