@@ -46,6 +46,23 @@ class DumpController extends AbstractRestfulController
 	    $maxx = floatval($this->params()->fromQuery('maxx', 90.0));
 	    $miny = floatval($this->params()->fromQuery('miny', -180.0));
 	    $maxy = floatval($this->params()->fromQuery('maxy', 180.0));
+	    $types = $this->params()->fromQuery('types', '');
+
+	    $this->response->getHeaders()->addHeaders(array('Access-Control-Allow-Origin' => '*', 'Content-Type'=>'application/json'));
+	    if(strlen($types) > 0){
+		$tt = explode(',', $types);
+		$peep = [];
+	        foreach($tt as &$onetype){
+	          $peep[$onetype]=1;
+		}
+		$data = $this->repo->findFilteredBy($peep);
+		$out = [];
+		foreach($data as $point){
+		  $out[] = $point->toArray();
+		}
+                $this->response->setContent(\json_encode($out)); // $data
+                return $this->response;
+	    }
 
 	    if($minx == -90.0 && $miny == 90.0 && $maxx == -180.0 && $maxy == 180.0)
 		$data = $this->repo->findAll();
@@ -55,7 +72,6 @@ class DumpController extends AbstractRestfulController
 	    foreach($data as $dump)
 	        $out[] = $dump->toArray();
 
-	    $this->response->getHeaders()->addHeaders(array('Access-Control-Allow-Origin' => '*', 'Content-Type'=>'application/json'));
             $this->response->setContent(\json_encode($out));
             return $this->response;
 	}

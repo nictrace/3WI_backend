@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * This class represents users
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Application\Repository\TransactionsRepository")
  * @ORM\Table(name="transaction")
  */
 class Transaction
@@ -26,13 +26,17 @@ class Transaction
      */
     protected $containerId;
     /**
-     * @ORM\Column(name="weight", type="integer")
+     * @ORM\Column(name="weight", type="decimal")
      */
     protected $weight;
     /**
      * @ORM\Column(name="scrap_class", type="string")
      */
-    protected $scrap_class;
+    protected $scrapClass;
+    /**
+     * @ORM\Column(name="timestamp", type="datetime")
+     */
+    protected $timestamp;
 
     public function __construct() {
 //        $this->privs = new ArrayCollection();
@@ -71,5 +75,22 @@ class Transaction
     public function setWeight($val){
         $this->weight = $val;
         return $this;
+    }
+    public function getScrapClass(){
+        return $this->scrapClass;
+    }
+    public function setScrapClass($val){
+        $this->scrapClass = $val;
+        return $this;
+    }
+    public function toArray(){
+	$out = [];
+	$out['id'] = $this->getId();
+	$out['user_id'] =  $this->getUserId();
+	$out['container_id'] = $this->getContainerId();
+	$out['timestamp'] = $this->getTimestamp();
+	$out['weight'] = $this->getWeight();
+	$out['scrap_class'] = $this->getScrapClass();
+	return $out;
     }
 }

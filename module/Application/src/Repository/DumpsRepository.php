@@ -24,6 +24,34 @@ class DumpsRepository extends EntityRepository
         return $queryBuilder->getQuery();
     }
 */
+    public function findFilteredBy($ord){
+    	$entityManager = $this->getEntityManager();
+	$queryBuilder = $entityManager->createQueryBuilder();
+
+	$queryBuilder->select('d')->from(Dumps::class, 'd');
+
+	if(array_key_exists('plastic', $ord))
+	    $queryBuilder->orWhere('d.plastic =1');
+        if(array_key_exists('metal', $ord))
+            $queryBuilder->orWhere('d.metal =1');
+        if(array_key_exists('paper', $ord))
+            $queryBuilder->orWhere('d.paper =1');
+        if(array_key_exists('glass', $ord))
+            $queryBuilder->orWhere('d.glass =1');
+        if(array_key_exists('cloth', $ord))
+            $queryBuilder->orWhere('d.cloth =1');
+        if(array_key_exists('tetrapack', $ord))
+            $queryBuilder->orWhere('d.tetrapack =1');
+        if(array_key_exists('house_tech', $ord))
+            $queryBuilder->orWhere('d.houseTech =1');
+        if(array_key_exists('lamps', $ord))
+            $queryBuilder->orWhere('d.lamps =1');
+        if(array_key_exists('batteries', $ord))
+            $queryBuilder->orWhere('d.batteries =1');
+
+	return $queryBuilder->getQuery()->getResult();
+    }
+
     public function findBetween($x1,$x2,$y1,$y2)
     {
 	$em = $this->getEntityManager();

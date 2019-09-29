@@ -28,6 +28,7 @@ class UserController extends AbstractRestfulController
             $this->container = $object;
             $this->em = $this->container->get('doctrine.entitymanager.orm_default');
             $this->repo = $this->em->getRepository(\Application\Entity\User::class);
+
             $this->db = new Adapter($this->container->get('Config')['db']);
         }
         public function options(){
@@ -65,18 +66,26 @@ class UserController extends AbstractRestfulController
     }
     public function get($id){
 	$this->response->getHeaders()->addHeaders(array('Access-Control-Allow-Origin' => '*', 'Content-Type'=>'application/json'));
-	$data = $this->repo->findOneById($id);
-	if(!is_null($data)){
+	$udata = $this->repo->findOneById($id);
+	$userinfo = $udata->toArray();
+	if(!is_null($udata)){
 	    // checking for extra parameters
 	    $stat = intval($this->params()->fromQuery('stat', 0));
+
 	    if($stat > 0){
 		// get stat and display it
 		$stats = '100500 of plastic bottles';
+		$repoTrans = $this->em->getRepository(\Application\Entity\Transaction::class);
+		$data = $repoTrans->findBy(['userId'=>$id]);
+		$arstats = [];
+		foreach($data as $tranz){
+		  $arstats[] = $tranz->toArray();
+		}
 	    }
             else $stats = '';
 
-	    $userinfo = $data->toArray();
-	    $userinfo['stat'] = $stats;
+	    //$userinfo = $data->toArray();
+	    $userinfo['stat'] = $arstats;
             $this->response->setContent(\json_encode($userinfo));
 	}
         else{
